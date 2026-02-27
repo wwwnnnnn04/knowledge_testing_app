@@ -1,0 +1,11 @@
+class: Answer
+table: answer
+
+fields:
+  text: String
+  isCorrect: bool
+
+  questionId: int
+  question: Question?, relation(name=question_answer, field=questionId)
+
+  answerAttempt: List<AnswerAttempt>?, relation(name=answer_answer_attempt)

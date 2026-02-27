@@ -1,0 +1,12 @@
+class: Question
+table: question
+
+fields:
+  text: String
+  order: int
+
+  testId: int
+  test: Test?, relation(name=test_question, field=testId)
+
+  answer: List<Answer>?, relation(name=question_answer)
+  answerAttempt: List<AnswerAttempt>?, relation(name=question_answer_attempt)

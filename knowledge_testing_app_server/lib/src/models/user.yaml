@@ -1,0 +1,11 @@
+class: User
+table: user
+
+fields:
+  username: String
+  email: String
+  password: String
+  role: Role
+
+  test: List<Test>?, relation(name=user_test)
+  attempt: List<Attempt>?, relation(name=user_attempt)

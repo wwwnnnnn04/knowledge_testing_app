@@ -1,0 +1,44 @@
+services:
+  # Development services
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "8090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: knowledge_testing_app
+      POSTGRES_PASSWORD: "2VhFx0v1TMW_JlzXbHXdce0auw9YHWj4"
+    volumes:
+      - knowledge_testing_app_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6.2.6
+    ports:
+      - "8091:6379"
+    command: redis-server --requirepass "_fXzDZp-jOA6ghp-lTN4rVwbw9nTADxk"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+  # Test services
+  postgres_test:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "9090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: knowledge_testing_app_test
+      POSTGRES_PASSWORD: "363omA9pXDX6ZX6exiqZ7B5XUlFpZiy8"
+    volumes:
+      - knowledge_testing_app_test_data:/var/lib/postgresql/data
+
+  redis_test:
+    image: redis:6.2.6
+    ports:
+      - "9091:6379"
+    command: redis-server --requirepass "Dr1WsypNf61_d8Hcmc-QZu_59YE9PXk1"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+volumes:
+  knowledge_testing_app_data:
+  knowledge_testing_app_test_data:

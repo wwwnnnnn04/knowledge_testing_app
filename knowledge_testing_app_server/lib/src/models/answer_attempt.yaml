@@ -1,0 +1,14 @@
+class: AnswerAttempt
+table: answer_attempt
+
+fields:
+  isCorrect: bool
+
+  questionId: int
+  question: Question?, relation(name=question_answer_attempt, field=questionId)
+
+  answerId: int
+  answer: Answer?, relation(name=answer_answer_attempt, field=answerId)
+
+  attemptId: int
+  attempt: Attempt?, relation(name=attempt_answer_attempt, field=attemptId)

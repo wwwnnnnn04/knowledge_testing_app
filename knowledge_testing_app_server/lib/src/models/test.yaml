@@ -1,0 +1,11 @@
+class: Test
+table: test
+
+fields:
+  title: String
+
+  creatorId: int
+  creator: User?, relation(name=user_test, field=creatorId)
+
+  attempt: List<Attempt>?, relation(name=test_attempt)
+  question: List<Question>?, relation(name=test_question)
