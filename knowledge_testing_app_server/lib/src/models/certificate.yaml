@@ -1,0 +1,14 @@
+class: Certificate
+table: certificate
+
+fields:
+  userId: int
+  user: User?, relation(name=user_certificate, field=userId)
+
+  testId: int
+  test: Test?, relation(name=test_certificate, field=testId)
+
+  attemptId: int
+  attempt: Attempt?, relation(name=attempt_certificate, field=attemptId)
+
+  percentage: double

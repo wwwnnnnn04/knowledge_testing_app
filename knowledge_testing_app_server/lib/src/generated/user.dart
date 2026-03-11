@@ -16,8 +16,9 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import 'role.dart' as _i2;
 import 'test.dart' as _i3;
 import 'attempt.dart' as _i4;
+import 'certificate.dart' as _i5;
 import 'package:knowledge_testing_app_server/src/generated/protocol.dart'
-    as _i5;
+    as _i6;
 
 abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   User._({
@@ -28,6 +29,7 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required this.role,
     this.test,
     this.attempt,
+    this.certificates,
   });
 
   factory User({
@@ -38,6 +40,7 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required _i2.Role role,
     List<_i3.Test>? test,
     List<_i4.Attempt>? attempt,
+    List<_i5.Certificate>? certificates,
   }) = _UserImpl;
 
   factory User.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -49,13 +52,18 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       role: _i2.Role.fromJson((jsonSerialization['role'] as String)),
       test: jsonSerialization['test'] == null
           ? null
-          : _i5.Protocol().deserialize<List<_i3.Test>>(
+          : _i6.Protocol().deserialize<List<_i3.Test>>(
               jsonSerialization['test'],
             ),
       attempt: jsonSerialization['attempt'] == null
           ? null
-          : _i5.Protocol().deserialize<List<_i4.Attempt>>(
+          : _i6.Protocol().deserialize<List<_i4.Attempt>>(
               jsonSerialization['attempt'],
+            ),
+      certificates: jsonSerialization['certificates'] == null
+          ? null
+          : _i6.Protocol().deserialize<List<_i5.Certificate>>(
+              jsonSerialization['certificates'],
             ),
     );
   }
@@ -79,6 +87,8 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   List<_i4.Attempt>? attempt;
 
+  List<_i5.Certificate>? certificates;
+
   @override
   _i1.Table<int?> get table => t;
 
@@ -93,6 +103,7 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     _i2.Role? role,
     List<_i3.Test>? test,
     List<_i4.Attempt>? attempt,
+    List<_i5.Certificate>? certificates,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -106,6 +117,8 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       if (test != null) 'test': test?.toJson(valueToJson: (v) => v.toJson()),
       if (attempt != null)
         'attempt': attempt?.toJson(valueToJson: (v) => v.toJson()),
+      if (certificates != null)
+        'certificates': certificates?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -122,16 +135,22 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
         'test': test?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
       if (attempt != null)
         'attempt': attempt?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      if (certificates != null)
+        'certificates': certificates?.toJson(
+          valueToJson: (v) => v.toJsonForProtocol(),
+        ),
     };
   }
 
   static UserInclude include({
     _i3.TestIncludeList? test,
     _i4.AttemptIncludeList? attempt,
+    _i5.CertificateIncludeList? certificates,
   }) {
     return UserInclude._(
       test: test,
       attempt: attempt,
+      certificates: certificates,
     );
   }
 
@@ -172,6 +191,7 @@ class _UserImpl extends User {
     required _i2.Role role,
     List<_i3.Test>? test,
     List<_i4.Attempt>? attempt,
+    List<_i5.Certificate>? certificates,
   }) : super._(
          id: id,
          username: username,
@@ -180,6 +200,7 @@ class _UserImpl extends User {
          role: role,
          test: test,
          attempt: attempt,
+         certificates: certificates,
        );
 
   /// Returns a shallow copy of this [User]
@@ -194,6 +215,7 @@ class _UserImpl extends User {
     _i2.Role? role,
     Object? test = _Undefined,
     Object? attempt = _Undefined,
+    Object? certificates = _Undefined,
   }) {
     return User(
       id: id is int? ? id : this.id,
@@ -207,6 +229,9 @@ class _UserImpl extends User {
       attempt: attempt is List<_i4.Attempt>?
           ? attempt
           : this.attempt?.map((e0) => e0.copyWith()).toList(),
+      certificates: certificates is List<_i5.Certificate>?
+          ? certificates
+          : this.certificates?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }
@@ -275,6 +300,10 @@ class UserTable extends _i1.Table<int?> {
 
   _i1.ManyRelation<_i4.AttemptTable>? _attempt;
 
+  _i5.CertificateTable? ___certificates;
+
+  _i1.ManyRelation<_i5.CertificateTable>? _certificates;
+
   _i3.TestTable get __test {
     if (___test != null) return ___test!;
     ___test = _i1.createRelationTable(
@@ -299,6 +328,19 @@ class UserTable extends _i1.Table<int?> {
           _i4.AttemptTable(tableRelation: foreignTableRelation),
     );
     return ___attempt!;
+  }
+
+  _i5.CertificateTable get __certificates {
+    if (___certificates != null) return ___certificates!;
+    ___certificates = _i1.createRelationTable(
+      relationFieldName: '__certificates',
+      field: User.t.id,
+      foreignField: _i5.Certificate.t.userId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i5.CertificateTable(tableRelation: foreignTableRelation),
+    );
+    return ___certificates!;
   }
 
   _i1.ManyRelation<_i3.TestTable> get test {
@@ -339,6 +381,25 @@ class UserTable extends _i1.Table<int?> {
     return _attempt!;
   }
 
+  _i1.ManyRelation<_i5.CertificateTable> get certificates {
+    if (_certificates != null) return _certificates!;
+    var relationTable = _i1.createRelationTable(
+      relationFieldName: 'certificates',
+      field: User.t.id,
+      foreignField: _i5.Certificate.t.userId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i5.CertificateTable(tableRelation: foreignTableRelation),
+    );
+    _certificates = _i1.ManyRelation<_i5.CertificateTable>(
+      tableWithRelations: relationTable,
+      table: _i5.CertificateTable(
+        tableRelation: relationTable.tableRelation!.lastRelation,
+      ),
+    );
+    return _certificates!;
+  }
+
   @override
   List<_i1.Column> get columns => [
     id,
@@ -356,6 +417,9 @@ class UserTable extends _i1.Table<int?> {
     if (relationField == 'attempt') {
       return __attempt;
     }
+    if (relationField == 'certificates') {
+      return __certificates;
+    }
     return null;
   }
 }
@@ -364,19 +428,24 @@ class UserInclude extends _i1.IncludeObject {
   UserInclude._({
     _i3.TestIncludeList? test,
     _i4.AttemptIncludeList? attempt,
+    _i5.CertificateIncludeList? certificates,
   }) {
     _test = test;
     _attempt = attempt;
+    _certificates = certificates;
   }
 
   _i3.TestIncludeList? _test;
 
   _i4.AttemptIncludeList? _attempt;
 
+  _i5.CertificateIncludeList? _certificates;
+
   @override
   Map<String, _i1.Include?> get includes => {
     'test': _test,
     'attempt': _attempt,
+    'certificates': _certificates,
   };
 
   @override
@@ -714,6 +783,31 @@ class UserAttachRepository {
       transaction: transaction,
     );
   }
+
+  /// Creates a relation between this [User] and the given [Certificate]s
+  /// by setting each [Certificate]'s foreign key `userId` to refer to this [User].
+  Future<void> certificates(
+    _i1.Session session,
+    User user,
+    List<_i5.Certificate> certificate, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (certificate.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('certificate.id');
+    }
+    if (user.id == null) {
+      throw ArgumentError.notNull('user.id');
+    }
+
+    var $certificate = certificate
+        .map((e) => e.copyWith(userId: user.id))
+        .toList();
+    await session.db.update<_i5.Certificate>(
+      $certificate,
+      columns: [_i5.Certificate.t.userId],
+      transaction: transaction,
+    );
+  }
 }
 
 class UserAttachRowRepository {
@@ -761,6 +855,29 @@ class UserAttachRowRepository {
     await session.db.updateRow<_i4.Attempt>(
       $attempt,
       columns: [_i4.Attempt.t.userId],
+      transaction: transaction,
+    );
+  }
+
+  /// Creates a relation between this [User] and the given [Certificate]
+  /// by setting the [Certificate]'s foreign key `userId` to refer to this [User].
+  Future<void> certificates(
+    _i1.Session session,
+    User user,
+    _i5.Certificate certificate, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (certificate.id == null) {
+      throw ArgumentError.notNull('certificate.id');
+    }
+    if (user.id == null) {
+      throw ArgumentError.notNull('user.id');
+    }
+
+    var $certificate = certificate.copyWith(userId: user.id);
+    await session.db.updateRow<_i5.Certificate>(
+      $certificate,
+      columns: [_i5.Certificate.t.userId],
       transaction: transaction,
     );
   }

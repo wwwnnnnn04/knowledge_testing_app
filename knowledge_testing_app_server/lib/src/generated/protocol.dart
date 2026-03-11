@@ -19,18 +19,30 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'answer.dart' as _i5;
 import 'answer_attempt.dart' as _i6;
 import 'attempt.dart' as _i7;
-import 'greetings/greeting.dart' as _i8;
-import 'question.dart' as _i9;
-import 'role.dart' as _i10;
-import 'test.dart' as _i11;
-import 'user.dart' as _i12;
+import 'category.dart' as _i8;
+import 'certificate.dart' as _i9;
+import 'greetings/greeting.dart' as _i10;
+import 'log.dart' as _i11;
+import 'question.dart' as _i12;
+import 'result.dart' as _i13;
+import 'role.dart' as _i14;
+import 'tag.dart' as _i15;
+import 'test.dart' as _i16;
+import 'test_tag.dart' as _i17;
+import 'user.dart' as _i18;
 export 'answer.dart';
 export 'answer_attempt.dart';
 export 'attempt.dart';
+export 'category.dart';
+export 'certificate.dart';
 export 'greetings/greeting.dart';
+export 'log.dart';
 export 'question.dart';
+export 'result.dart';
 export 'role.dart';
+export 'tag.dart';
 export 'test.dart';
+export 'test_tag.dart';
 export 'user.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
@@ -203,18 +215,6 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'nextval(\'attempt_id_seq\'::regclass)',
         ),
         _i2.ColumnDefinition(
-          name: 'score',
-          columnType: _i2.ColumnType.bigint,
-          isNullable: false,
-          dartType: 'int',
-        ),
-        _i2.ColumnDefinition(
-          name: 'maxScore',
-          columnType: _i2.ColumnType.bigint,
-          isNullable: false,
-          dartType: 'int',
-        ),
-        _i2.ColumnDefinition(
           name: 'userId',
           columnType: _i2.ColumnType.bigint,
           isNullable: false,
@@ -252,6 +252,181 @@ class Protocol extends _i1.SerializationManagerServer {
       indexes: [
         _i2.IndexDefinition(
           indexName: 'attempt_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'category',
+      dartName: 'Category',
+      schema: 'public',
+      module: 'knowledge_testing_app',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'category_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'name',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'category_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'certificate',
+      dartName: 'Certificate',
+      schema: 'public',
+      module: 'knowledge_testing_app',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'certificate_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'testId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'attemptId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'percentage',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'certificate_fk_0',
+          columns: ['userId'],
+          referenceTable: 'user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'certificate_fk_1',
+          columns: ['testId'],
+          referenceTable: 'test',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'certificate_fk_2',
+          columns: ['attemptId'],
+          referenceTable: 'attempt',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'certificate_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'log',
+      dartName: 'Log',
+      schema: 'public',
+      module: 'knowledge_testing_app',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'log_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'action',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'log_pkey',
           tableSpace: null,
           elements: [
             _i2.IndexElementDefinition(
@@ -328,6 +503,130 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'result',
+      dartName: 'Result',
+      schema: 'public',
+      module: 'knowledge_testing_app',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'result_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'attemptId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'score',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'maxScore',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'percentage',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'passed',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'result_fk_0',
+          columns: ['attemptId'],
+          referenceTable: 'attempt',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'result_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'attempt_unique',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'attemptId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'tag',
+      dartName: 'Tag',
+      schema: 'public',
+      module: 'knowledge_testing_app',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'tag_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'name',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'tag_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'test',
       dartName: 'Test',
       schema: 'public',
@@ -352,6 +651,12 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: false,
           dartType: 'int',
         ),
+        _i2.ColumnDefinition(
+          name: 'categoryId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
       ],
       foreignKeys: [
         _i2.ForeignKeyDefinition(
@@ -364,10 +669,85 @@ class Protocol extends _i1.SerializationManagerServer {
           onDelete: _i2.ForeignKeyAction.noAction,
           matchType: null,
         ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'test_fk_1',
+          columns: ['categoryId'],
+          referenceTable: 'category',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
       ],
       indexes: [
         _i2.IndexDefinition(
           indexName: 'test_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'test_tag',
+      dartName: 'TestTag',
+      schema: 'public',
+      module: 'knowledge_testing_app',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'test_tag_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'testId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'tagId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'test_tag_fk_0',
+          columns: ['testId'],
+          referenceTable: 'test',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'test_tag_fk_1',
+          columns: ['tagId'],
+          referenceTable: 'tag',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'test_tag_pkey',
           tableSpace: null,
           elements: [
             _i2.IndexElementDefinition(
@@ -479,20 +859,38 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i7.Attempt) {
       return _i7.Attempt.fromJson(data) as T;
     }
-    if (t == _i8.Greeting) {
-      return _i8.Greeting.fromJson(data) as T;
+    if (t == _i8.Category) {
+      return _i8.Category.fromJson(data) as T;
     }
-    if (t == _i9.Question) {
-      return _i9.Question.fromJson(data) as T;
+    if (t == _i9.Certificate) {
+      return _i9.Certificate.fromJson(data) as T;
     }
-    if (t == _i10.Role) {
-      return _i10.Role.fromJson(data) as T;
+    if (t == _i10.Greeting) {
+      return _i10.Greeting.fromJson(data) as T;
     }
-    if (t == _i11.Test) {
-      return _i11.Test.fromJson(data) as T;
+    if (t == _i11.Log) {
+      return _i11.Log.fromJson(data) as T;
     }
-    if (t == _i12.User) {
-      return _i12.User.fromJson(data) as T;
+    if (t == _i12.Question) {
+      return _i12.Question.fromJson(data) as T;
+    }
+    if (t == _i13.Result) {
+      return _i13.Result.fromJson(data) as T;
+    }
+    if (t == _i14.Role) {
+      return _i14.Role.fromJson(data) as T;
+    }
+    if (t == _i15.Tag) {
+      return _i15.Tag.fromJson(data) as T;
+    }
+    if (t == _i16.Test) {
+      return _i16.Test.fromJson(data) as T;
+    }
+    if (t == _i17.TestTag) {
+      return _i17.TestTag.fromJson(data) as T;
+    }
+    if (t == _i18.User) {
+      return _i18.User.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Answer?>()) {
       return (data != null ? _i5.Answer.fromJson(data) : null) as T;
@@ -503,20 +901,38 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i7.Attempt?>()) {
       return (data != null ? _i7.Attempt.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i8.Greeting?>()) {
-      return (data != null ? _i8.Greeting.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i8.Category?>()) {
+      return (data != null ? _i8.Category.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i9.Question?>()) {
-      return (data != null ? _i9.Question.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i9.Certificate?>()) {
+      return (data != null ? _i9.Certificate.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i10.Role?>()) {
-      return (data != null ? _i10.Role.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i10.Greeting?>()) {
+      return (data != null ? _i10.Greeting.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i11.Test?>()) {
-      return (data != null ? _i11.Test.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.Log?>()) {
+      return (data != null ? _i11.Log.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i12.User?>()) {
-      return (data != null ? _i12.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.Question?>()) {
+      return (data != null ? _i12.Question.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i13.Result?>()) {
+      return (data != null ? _i13.Result.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i14.Role?>()) {
+      return (data != null ? _i14.Role.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i15.Tag?>()) {
+      return (data != null ? _i15.Tag.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i16.Test?>()) {
+      return (data != null ? _i16.Test.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i17.TestTag?>()) {
+      return (data != null ? _i17.TestTag.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i18.User?>()) {
+      return (data != null ? _i18.User.fromJson(data) : null) as T;
     }
     if (t == List<_i6.AnswerAttempt>) {
       return (data as List)
@@ -532,6 +948,27 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
+    if (t == List<_i9.Certificate>) {
+      return (data as List).map((e) => deserialize<_i9.Certificate>(e)).toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i9.Certificate>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i9.Certificate>(e))
+                    .toList()
+              : null)
+          as T;
+    }
+    if (t == List<_i16.Test>) {
+      return (data as List).map((e) => deserialize<_i16.Test>(e)).toList() as T;
+    }
+    if (t == _i1.getType<List<_i16.Test>?>()) {
+      return (data != null
+              ? (data as List).map((e) => deserialize<_i16.Test>(e)).toList()
+              : null)
+          as T;
+    }
     if (t == List<_i5.Answer>) {
       return (data as List).map((e) => deserialize<_i5.Answer>(e)).toList()
           as T;
@@ -539,6 +976,16 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<List<_i5.Answer>?>()) {
       return (data != null
               ? (data as List).map((e) => deserialize<_i5.Answer>(e)).toList()
+              : null)
+          as T;
+    }
+    if (t == List<_i17.TestTag>) {
+      return (data as List).map((e) => deserialize<_i17.TestTag>(e)).toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i17.TestTag>?>()) {
+      return (data != null
+              ? (data as List).map((e) => deserialize<_i17.TestTag>(e)).toList()
               : null)
           as T;
     }
@@ -552,22 +999,15 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == List<_i9.Question>) {
-      return (data as List).map((e) => deserialize<_i9.Question>(e)).toList()
+    if (t == List<_i12.Question>) {
+      return (data as List).map((e) => deserialize<_i12.Question>(e)).toList()
           as T;
     }
-    if (t == _i1.getType<List<_i9.Question>?>()) {
+    if (t == _i1.getType<List<_i12.Question>?>()) {
       return (data != null
-              ? (data as List).map((e) => deserialize<_i9.Question>(e)).toList()
-              : null)
-          as T;
-    }
-    if (t == List<_i11.Test>) {
-      return (data as List).map((e) => deserialize<_i11.Test>(e)).toList() as T;
-    }
-    if (t == _i1.getType<List<_i11.Test>?>()) {
-      return (data != null
-              ? (data as List).map((e) => deserialize<_i11.Test>(e)).toList()
+              ? (data as List)
+                    .map((e) => deserialize<_i12.Question>(e))
+                    .toList()
               : null)
           as T;
     }
@@ -588,11 +1028,17 @@ class Protocol extends _i1.SerializationManagerServer {
       _i5.Answer => 'Answer',
       _i6.AnswerAttempt => 'AnswerAttempt',
       _i7.Attempt => 'Attempt',
-      _i8.Greeting => 'Greeting',
-      _i9.Question => 'Question',
-      _i10.Role => 'Role',
-      _i11.Test => 'Test',
-      _i12.User => 'User',
+      _i8.Category => 'Category',
+      _i9.Certificate => 'Certificate',
+      _i10.Greeting => 'Greeting',
+      _i11.Log => 'Log',
+      _i12.Question => 'Question',
+      _i13.Result => 'Result',
+      _i14.Role => 'Role',
+      _i15.Tag => 'Tag',
+      _i16.Test => 'Test',
+      _i17.TestTag => 'TestTag',
+      _i18.User => 'User',
       _ => null,
     };
   }
@@ -616,15 +1062,27 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'AnswerAttempt';
       case _i7.Attempt():
         return 'Attempt';
-      case _i8.Greeting():
+      case _i8.Category():
+        return 'Category';
+      case _i9.Certificate():
+        return 'Certificate';
+      case _i10.Greeting():
         return 'Greeting';
-      case _i9.Question():
+      case _i11.Log():
+        return 'Log';
+      case _i12.Question():
         return 'Question';
-      case _i10.Role():
+      case _i13.Result():
+        return 'Result';
+      case _i14.Role():
         return 'Role';
-      case _i11.Test():
+      case _i15.Tag():
+        return 'Tag';
+      case _i16.Test():
         return 'Test';
-      case _i12.User():
+      case _i17.TestTag():
+        return 'TestTag';
+      case _i18.User():
         return 'User';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -657,20 +1115,38 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Attempt') {
       return deserialize<_i7.Attempt>(data['data']);
     }
+    if (dataClassName == 'Category') {
+      return deserialize<_i8.Category>(data['data']);
+    }
+    if (dataClassName == 'Certificate') {
+      return deserialize<_i9.Certificate>(data['data']);
+    }
     if (dataClassName == 'Greeting') {
-      return deserialize<_i8.Greeting>(data['data']);
+      return deserialize<_i10.Greeting>(data['data']);
+    }
+    if (dataClassName == 'Log') {
+      return deserialize<_i11.Log>(data['data']);
     }
     if (dataClassName == 'Question') {
-      return deserialize<_i9.Question>(data['data']);
+      return deserialize<_i12.Question>(data['data']);
+    }
+    if (dataClassName == 'Result') {
+      return deserialize<_i13.Result>(data['data']);
     }
     if (dataClassName == 'Role') {
-      return deserialize<_i10.Role>(data['data']);
+      return deserialize<_i14.Role>(data['data']);
+    }
+    if (dataClassName == 'Tag') {
+      return deserialize<_i15.Tag>(data['data']);
     }
     if (dataClassName == 'Test') {
-      return deserialize<_i11.Test>(data['data']);
+      return deserialize<_i16.Test>(data['data']);
+    }
+    if (dataClassName == 'TestTag') {
+      return deserialize<_i17.TestTag>(data['data']);
     }
     if (dataClassName == 'User') {
-      return deserialize<_i12.User>(data['data']);
+      return deserialize<_i18.User>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -714,12 +1190,24 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i6.AnswerAttempt.t;
       case _i7.Attempt:
         return _i7.Attempt.t;
-      case _i9.Question:
-        return _i9.Question.t;
-      case _i11.Test:
-        return _i11.Test.t;
-      case _i12.User:
-        return _i12.User.t;
+      case _i8.Category:
+        return _i8.Category.t;
+      case _i9.Certificate:
+        return _i9.Certificate.t;
+      case _i11.Log:
+        return _i11.Log.t;
+      case _i12.Question:
+        return _i12.Question.t;
+      case _i13.Result:
+        return _i13.Result.t;
+      case _i15.Tag:
+        return _i15.Tag.t;
+      case _i16.Test:
+        return _i16.Test.t;
+      case _i17.TestTag:
+        return _i17.TestTag.t;
+      case _i18.User:
+        return _i18.User.t;
     }
     return null;
   }

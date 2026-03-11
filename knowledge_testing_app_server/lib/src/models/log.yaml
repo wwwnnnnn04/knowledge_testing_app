@@ -1,0 +1,7 @@
+class: Log
+table: log
+
+fields:
+  userId: int
+  action: String
+  createdAt: DateTime

@@ -2,13 +2,13 @@ class: Attempt
 table: attempt
 
 fields:
-  score: int
-  maxScore: int
-
   userId: int
   user: User?, relation(name=user_attempt, field=userId)
 
   testId: int
   test: Test?, relation(name=test_attempt, field=testId)
 
+  result: Result?, relation(name=attempt_result)
+
   answerAttempt: List<AnswerAttempt>?, relation(name=attempt_answer_attempt)
+  certificates: List<Certificate>?, relation(name=attempt_certificate)

@@ -12,9 +12,12 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'user.dart' as _i2;
-import 'attempt.dart' as _i3;
-import 'question.dart' as _i4;
-import 'package:knowledge_testing_app_client/src/protocol/protocol.dart' as _i5;
+import 'category.dart' as _i3;
+import 'attempt.dart' as _i4;
+import 'question.dart' as _i5;
+import 'test_tag.dart' as _i6;
+import 'certificate.dart' as _i7;
+import 'package:knowledge_testing_app_client/src/protocol/protocol.dart' as _i8;
 
 abstract class Test implements _i1.SerializableModel {
   Test._({
@@ -22,8 +25,12 @@ abstract class Test implements _i1.SerializableModel {
     required this.title,
     required this.creatorId,
     this.creator,
+    required this.categoryId,
+    this.category,
     this.attempt,
     this.question,
+    this.testTags,
+    this.certificates,
   });
 
   factory Test({
@@ -31,8 +38,12 @@ abstract class Test implements _i1.SerializableModel {
     required String title,
     required int creatorId,
     _i2.User? creator,
-    List<_i3.Attempt>? attempt,
-    List<_i4.Question>? question,
+    required int categoryId,
+    _i3.Category? category,
+    List<_i4.Attempt>? attempt,
+    List<_i5.Question>? question,
+    List<_i6.TestTag>? testTags,
+    List<_i7.Certificate>? certificates,
   }) = _TestImpl;
 
   factory Test.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -42,16 +53,32 @@ abstract class Test implements _i1.SerializableModel {
       creatorId: jsonSerialization['creatorId'] as int,
       creator: jsonSerialization['creator'] == null
           ? null
-          : _i5.Protocol().deserialize<_i2.User>(jsonSerialization['creator']),
+          : _i8.Protocol().deserialize<_i2.User>(jsonSerialization['creator']),
+      categoryId: jsonSerialization['categoryId'] as int,
+      category: jsonSerialization['category'] == null
+          ? null
+          : _i8.Protocol().deserialize<_i3.Category>(
+              jsonSerialization['category'],
+            ),
       attempt: jsonSerialization['attempt'] == null
           ? null
-          : _i5.Protocol().deserialize<List<_i3.Attempt>>(
+          : _i8.Protocol().deserialize<List<_i4.Attempt>>(
               jsonSerialization['attempt'],
             ),
       question: jsonSerialization['question'] == null
           ? null
-          : _i5.Protocol().deserialize<List<_i4.Question>>(
+          : _i8.Protocol().deserialize<List<_i5.Question>>(
               jsonSerialization['question'],
+            ),
+      testTags: jsonSerialization['testTags'] == null
+          ? null
+          : _i8.Protocol().deserialize<List<_i6.TestTag>>(
+              jsonSerialization['testTags'],
+            ),
+      certificates: jsonSerialization['certificates'] == null
+          ? null
+          : _i8.Protocol().deserialize<List<_i7.Certificate>>(
+              jsonSerialization['certificates'],
             ),
     );
   }
@@ -67,9 +94,17 @@ abstract class Test implements _i1.SerializableModel {
 
   _i2.User? creator;
 
-  List<_i3.Attempt>? attempt;
+  int categoryId;
 
-  List<_i4.Question>? question;
+  _i3.Category? category;
+
+  List<_i4.Attempt>? attempt;
+
+  List<_i5.Question>? question;
+
+  List<_i6.TestTag>? testTags;
+
+  List<_i7.Certificate>? certificates;
 
   /// Returns a shallow copy of this [Test]
   /// with some or all fields replaced by the given arguments.
@@ -79,8 +114,12 @@ abstract class Test implements _i1.SerializableModel {
     String? title,
     int? creatorId,
     _i2.User? creator,
-    List<_i3.Attempt>? attempt,
-    List<_i4.Question>? question,
+    int? categoryId,
+    _i3.Category? category,
+    List<_i4.Attempt>? attempt,
+    List<_i5.Question>? question,
+    List<_i6.TestTag>? testTags,
+    List<_i7.Certificate>? certificates,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -90,10 +129,16 @@ abstract class Test implements _i1.SerializableModel {
       'title': title,
       'creatorId': creatorId,
       if (creator != null) 'creator': creator?.toJson(),
+      'categoryId': categoryId,
+      if (category != null) 'category': category?.toJson(),
       if (attempt != null)
         'attempt': attempt?.toJson(valueToJson: (v) => v.toJson()),
       if (question != null)
         'question': question?.toJson(valueToJson: (v) => v.toJson()),
+      if (testTags != null)
+        'testTags': testTags?.toJson(valueToJson: (v) => v.toJson()),
+      if (certificates != null)
+        'certificates': certificates?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -111,15 +156,23 @@ class _TestImpl extends Test {
     required String title,
     required int creatorId,
     _i2.User? creator,
-    List<_i3.Attempt>? attempt,
-    List<_i4.Question>? question,
+    required int categoryId,
+    _i3.Category? category,
+    List<_i4.Attempt>? attempt,
+    List<_i5.Question>? question,
+    List<_i6.TestTag>? testTags,
+    List<_i7.Certificate>? certificates,
   }) : super._(
          id: id,
          title: title,
          creatorId: creatorId,
          creator: creator,
+         categoryId: categoryId,
+         category: category,
          attempt: attempt,
          question: question,
+         testTags: testTags,
+         certificates: certificates,
        );
 
   /// Returns a shallow copy of this [Test]
@@ -131,20 +184,34 @@ class _TestImpl extends Test {
     String? title,
     int? creatorId,
     Object? creator = _Undefined,
+    int? categoryId,
+    Object? category = _Undefined,
     Object? attempt = _Undefined,
     Object? question = _Undefined,
+    Object? testTags = _Undefined,
+    Object? certificates = _Undefined,
   }) {
     return Test(
       id: id is int? ? id : this.id,
       title: title ?? this.title,
       creatorId: creatorId ?? this.creatorId,
       creator: creator is _i2.User? ? creator : this.creator?.copyWith(),
-      attempt: attempt is List<_i3.Attempt>?
+      categoryId: categoryId ?? this.categoryId,
+      category: category is _i3.Category?
+          ? category
+          : this.category?.copyWith(),
+      attempt: attempt is List<_i4.Attempt>?
           ? attempt
           : this.attempt?.map((e0) => e0.copyWith()).toList(),
-      question: question is List<_i4.Question>?
+      question: question is List<_i5.Question>?
           ? question
           : this.question?.map((e0) => e0.copyWith()).toList(),
+      testTags: testTags is List<_i6.TestTag>?
+          ? testTags
+          : this.testTags?.map((e0) => e0.copyWith()).toList(),
+      certificates: certificates is List<_i7.Certificate>?
+          ? certificates
+          : this.certificates?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

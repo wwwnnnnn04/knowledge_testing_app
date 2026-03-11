@@ -15,51 +15,59 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'user.dart' as _i2;
 import 'test.dart' as _i3;
-import 'answer_attempt.dart' as _i4;
+import 'result.dart' as _i4;
+import 'answer_attempt.dart' as _i5;
+import 'certificate.dart' as _i6;
 import 'package:knowledge_testing_app_server/src/generated/protocol.dart'
-    as _i5;
+    as _i7;
 
 abstract class Attempt
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Attempt._({
     this.id,
-    required this.score,
-    required this.maxScore,
     required this.userId,
     this.user,
     required this.testId,
     this.test,
+    this.result,
     this.answerAttempt,
+    this.certificates,
   });
 
   factory Attempt({
     int? id,
-    required int score,
-    required int maxScore,
     required int userId,
     _i2.User? user,
     required int testId,
     _i3.Test? test,
-    List<_i4.AnswerAttempt>? answerAttempt,
+    _i4.Result? result,
+    List<_i5.AnswerAttempt>? answerAttempt,
+    List<_i6.Certificate>? certificates,
   }) = _AttemptImpl;
 
   factory Attempt.fromJson(Map<String, dynamic> jsonSerialization) {
     return Attempt(
       id: jsonSerialization['id'] as int?,
-      score: jsonSerialization['score'] as int,
-      maxScore: jsonSerialization['maxScore'] as int,
       userId: jsonSerialization['userId'] as int,
       user: jsonSerialization['user'] == null
           ? null
-          : _i5.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
+          : _i7.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       testId: jsonSerialization['testId'] as int,
       test: jsonSerialization['test'] == null
           ? null
-          : _i5.Protocol().deserialize<_i3.Test>(jsonSerialization['test']),
+          : _i7.Protocol().deserialize<_i3.Test>(jsonSerialization['test']),
+      result: jsonSerialization['result'] == null
+          ? null
+          : _i7.Protocol().deserialize<_i4.Result>(jsonSerialization['result']),
       answerAttempt: jsonSerialization['answerAttempt'] == null
           ? null
-          : _i5.Protocol().deserialize<List<_i4.AnswerAttempt>>(
+          : _i7.Protocol().deserialize<List<_i5.AnswerAttempt>>(
               jsonSerialization['answerAttempt'],
+            ),
+      certificates: jsonSerialization['certificates'] == null
+          ? null
+          : _i7.Protocol().deserialize<List<_i6.Certificate>>(
+              jsonSerialization['certificates'],
             ),
     );
   }
@@ -71,10 +79,6 @@ abstract class Attempt
   @override
   int? id;
 
-  int score;
-
-  int maxScore;
-
   int userId;
 
   _i2.User? user;
@@ -83,7 +87,11 @@ abstract class Attempt
 
   _i3.Test? test;
 
-  List<_i4.AnswerAttempt>? answerAttempt;
+  _i4.Result? result;
+
+  List<_i5.AnswerAttempt>? answerAttempt;
+
+  List<_i6.Certificate>? certificates;
 
   @override
   _i1.Table<int?> get table => t;
@@ -93,27 +101,28 @@ abstract class Attempt
   @_i1.useResult
   Attempt copyWith({
     int? id,
-    int? score,
-    int? maxScore,
     int? userId,
     _i2.User? user,
     int? testId,
     _i3.Test? test,
-    List<_i4.AnswerAttempt>? answerAttempt,
+    _i4.Result? result,
+    List<_i5.AnswerAttempt>? answerAttempt,
+    List<_i6.Certificate>? certificates,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Attempt',
       if (id != null) 'id': id,
-      'score': score,
-      'maxScore': maxScore,
       'userId': userId,
       if (user != null) 'user': user?.toJson(),
       'testId': testId,
       if (test != null) 'test': test?.toJson(),
+      if (result != null) 'result': result?.toJson(),
       if (answerAttempt != null)
         'answerAttempt': answerAttempt?.toJson(valueToJson: (v) => v.toJson()),
+      if (certificates != null)
+        'certificates': certificates?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -122,14 +131,17 @@ abstract class Attempt
     return {
       '__className__': 'Attempt',
       if (id != null) 'id': id,
-      'score': score,
-      'maxScore': maxScore,
       'userId': userId,
       if (user != null) 'user': user?.toJsonForProtocol(),
       'testId': testId,
       if (test != null) 'test': test?.toJsonForProtocol(),
+      if (result != null) 'result': result?.toJsonForProtocol(),
       if (answerAttempt != null)
         'answerAttempt': answerAttempt?.toJson(
+          valueToJson: (v) => v.toJsonForProtocol(),
+        ),
+      if (certificates != null)
+        'certificates': certificates?.toJson(
           valueToJson: (v) => v.toJsonForProtocol(),
         ),
     };
@@ -138,12 +150,16 @@ abstract class Attempt
   static AttemptInclude include({
     _i2.UserInclude? user,
     _i3.TestInclude? test,
-    _i4.AnswerAttemptIncludeList? answerAttempt,
+    _i4.ResultInclude? result,
+    _i5.AnswerAttemptIncludeList? answerAttempt,
+    _i6.CertificateIncludeList? certificates,
   }) {
     return AttemptInclude._(
       user: user,
       test: test,
+      result: result,
       answerAttempt: answerAttempt,
+      certificates: certificates,
     );
   }
 
@@ -178,22 +194,22 @@ class _Undefined {}
 class _AttemptImpl extends Attempt {
   _AttemptImpl({
     int? id,
-    required int score,
-    required int maxScore,
     required int userId,
     _i2.User? user,
     required int testId,
     _i3.Test? test,
-    List<_i4.AnswerAttempt>? answerAttempt,
+    _i4.Result? result,
+    List<_i5.AnswerAttempt>? answerAttempt,
+    List<_i6.Certificate>? certificates,
   }) : super._(
          id: id,
-         score: score,
-         maxScore: maxScore,
          userId: userId,
          user: user,
          testId: testId,
          test: test,
+         result: result,
          answerAttempt: answerAttempt,
+         certificates: certificates,
        );
 
   /// Returns a shallow copy of this [Attempt]
@@ -202,41 +218,33 @@ class _AttemptImpl extends Attempt {
   @override
   Attempt copyWith({
     Object? id = _Undefined,
-    int? score,
-    int? maxScore,
     int? userId,
     Object? user = _Undefined,
     int? testId,
     Object? test = _Undefined,
+    Object? result = _Undefined,
     Object? answerAttempt = _Undefined,
+    Object? certificates = _Undefined,
   }) {
     return Attempt(
       id: id is int? ? id : this.id,
-      score: score ?? this.score,
-      maxScore: maxScore ?? this.maxScore,
       userId: userId ?? this.userId,
       user: user is _i2.User? ? user : this.user?.copyWith(),
       testId: testId ?? this.testId,
       test: test is _i3.Test? ? test : this.test?.copyWith(),
-      answerAttempt: answerAttempt is List<_i4.AnswerAttempt>?
+      result: result is _i4.Result? ? result : this.result?.copyWith(),
+      answerAttempt: answerAttempt is List<_i5.AnswerAttempt>?
           ? answerAttempt
           : this.answerAttempt?.map((e0) => e0.copyWith()).toList(),
+      certificates: certificates is List<_i6.Certificate>?
+          ? certificates
+          : this.certificates?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }
 
 class AttemptUpdateTable extends _i1.UpdateTable<AttemptTable> {
   AttemptUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> score(int value) => _i1.ColumnValue(
-    table.score,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> maxScore(int value) => _i1.ColumnValue(
-    table.maxScore,
-    value,
-  );
 
   _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
     table.userId,
@@ -252,14 +260,6 @@ class AttemptUpdateTable extends _i1.UpdateTable<AttemptTable> {
 class AttemptTable extends _i1.Table<int?> {
   AttemptTable({super.tableRelation}) : super(tableName: 'attempt') {
     updateTable = AttemptUpdateTable(this);
-    score = _i1.ColumnInt(
-      'score',
-      this,
-    );
-    maxScore = _i1.ColumnInt(
-      'maxScore',
-      this,
-    );
     userId = _i1.ColumnInt(
       'userId',
       this,
@@ -272,10 +272,6 @@ class AttemptTable extends _i1.Table<int?> {
 
   late final AttemptUpdateTable updateTable;
 
-  late final _i1.ColumnInt score;
-
-  late final _i1.ColumnInt maxScore;
-
   late final _i1.ColumnInt userId;
 
   _i2.UserTable? _user;
@@ -284,9 +280,15 @@ class AttemptTable extends _i1.Table<int?> {
 
   _i3.TestTable? _test;
 
-  _i4.AnswerAttemptTable? ___answerAttempt;
+  _i4.ResultTable? _result;
 
-  _i1.ManyRelation<_i4.AnswerAttemptTable>? _answerAttempt;
+  _i5.AnswerAttemptTable? ___answerAttempt;
+
+  _i1.ManyRelation<_i5.AnswerAttemptTable>? _answerAttempt;
+
+  _i6.CertificateTable? ___certificates;
+
+  _i1.ManyRelation<_i6.CertificateTable>? _certificates;
 
   _i2.UserTable get user {
     if (_user != null) return _user!;
@@ -314,43 +316,86 @@ class AttemptTable extends _i1.Table<int?> {
     return _test!;
   }
 
-  _i4.AnswerAttemptTable get __answerAttempt {
+  _i4.ResultTable get result {
+    if (_result != null) return _result!;
+    _result = _i1.createRelationTable(
+      relationFieldName: 'result',
+      field: Attempt.t.id,
+      foreignField: _i4.Result.t.attemptId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i4.ResultTable(tableRelation: foreignTableRelation),
+    );
+    return _result!;
+  }
+
+  _i5.AnswerAttemptTable get __answerAttempt {
     if (___answerAttempt != null) return ___answerAttempt!;
     ___answerAttempt = _i1.createRelationTable(
       relationFieldName: '__answerAttempt',
       field: Attempt.t.id,
-      foreignField: _i4.AnswerAttempt.t.attemptId,
+      foreignField: _i5.AnswerAttempt.t.attemptId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i4.AnswerAttemptTable(tableRelation: foreignTableRelation),
+          _i5.AnswerAttemptTable(tableRelation: foreignTableRelation),
     );
     return ___answerAttempt!;
   }
 
-  _i1.ManyRelation<_i4.AnswerAttemptTable> get answerAttempt {
+  _i6.CertificateTable get __certificates {
+    if (___certificates != null) return ___certificates!;
+    ___certificates = _i1.createRelationTable(
+      relationFieldName: '__certificates',
+      field: Attempt.t.id,
+      foreignField: _i6.Certificate.t.attemptId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i6.CertificateTable(tableRelation: foreignTableRelation),
+    );
+    return ___certificates!;
+  }
+
+  _i1.ManyRelation<_i5.AnswerAttemptTable> get answerAttempt {
     if (_answerAttempt != null) return _answerAttempt!;
     var relationTable = _i1.createRelationTable(
       relationFieldName: 'answerAttempt',
       field: Attempt.t.id,
-      foreignField: _i4.AnswerAttempt.t.attemptId,
+      foreignField: _i5.AnswerAttempt.t.attemptId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i4.AnswerAttemptTable(tableRelation: foreignTableRelation),
+          _i5.AnswerAttemptTable(tableRelation: foreignTableRelation),
     );
-    _answerAttempt = _i1.ManyRelation<_i4.AnswerAttemptTable>(
+    _answerAttempt = _i1.ManyRelation<_i5.AnswerAttemptTable>(
       tableWithRelations: relationTable,
-      table: _i4.AnswerAttemptTable(
+      table: _i5.AnswerAttemptTable(
         tableRelation: relationTable.tableRelation!.lastRelation,
       ),
     );
     return _answerAttempt!;
   }
 
+  _i1.ManyRelation<_i6.CertificateTable> get certificates {
+    if (_certificates != null) return _certificates!;
+    var relationTable = _i1.createRelationTable(
+      relationFieldName: 'certificates',
+      field: Attempt.t.id,
+      foreignField: _i6.Certificate.t.attemptId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i6.CertificateTable(tableRelation: foreignTableRelation),
+    );
+    _certificates = _i1.ManyRelation<_i6.CertificateTable>(
+      tableWithRelations: relationTable,
+      table: _i6.CertificateTable(
+        tableRelation: relationTable.tableRelation!.lastRelation,
+      ),
+    );
+    return _certificates!;
+  }
+
   @override
   List<_i1.Column> get columns => [
     id,
-    score,
-    maxScore,
     userId,
     testId,
   ];
@@ -363,8 +408,14 @@ class AttemptTable extends _i1.Table<int?> {
     if (relationField == 'test') {
       return test;
     }
+    if (relationField == 'result') {
+      return result;
+    }
     if (relationField == 'answerAttempt') {
       return __answerAttempt;
+    }
+    if (relationField == 'certificates') {
+      return __certificates;
     }
     return null;
   }
@@ -374,24 +425,34 @@ class AttemptInclude extends _i1.IncludeObject {
   AttemptInclude._({
     _i2.UserInclude? user,
     _i3.TestInclude? test,
-    _i4.AnswerAttemptIncludeList? answerAttempt,
+    _i4.ResultInclude? result,
+    _i5.AnswerAttemptIncludeList? answerAttempt,
+    _i6.CertificateIncludeList? certificates,
   }) {
     _user = user;
     _test = test;
+    _result = result;
     _answerAttempt = answerAttempt;
+    _certificates = certificates;
   }
 
   _i2.UserInclude? _user;
 
   _i3.TestInclude? _test;
 
-  _i4.AnswerAttemptIncludeList? _answerAttempt;
+  _i4.ResultInclude? _result;
+
+  _i5.AnswerAttemptIncludeList? _answerAttempt;
+
+  _i6.CertificateIncludeList? _certificates;
 
   @override
   Map<String, _i1.Include?> get includes => {
     'user': _user,
     'test': _test,
+    'result': _result,
     'answerAttempt': _answerAttempt,
+    'certificates': _certificates,
   };
 
   @override
@@ -424,6 +485,10 @@ class AttemptRepository {
   final attach = const AttemptAttachRepository._();
 
   final attachRow = const AttemptAttachRowRepository._();
+
+  final detach = const AttemptDetachRepository._();
+
+  final detachRow = const AttemptDetachRowRepository._();
 
   /// Returns a list of [Attempt]s matching the given query parameters.
   ///
@@ -689,7 +754,7 @@ class AttemptAttachRepository {
   Future<void> answerAttempt(
     _i1.Session session,
     Attempt attempt,
-    List<_i4.AnswerAttempt> answerAttempt, {
+    List<_i5.AnswerAttempt> answerAttempt, {
     _i1.Transaction? transaction,
   }) async {
     if (answerAttempt.any((e) => e.id == null)) {
@@ -702,9 +767,34 @@ class AttemptAttachRepository {
     var $answerAttempt = answerAttempt
         .map((e) => e.copyWith(attemptId: attempt.id))
         .toList();
-    await session.db.update<_i4.AnswerAttempt>(
+    await session.db.update<_i5.AnswerAttempt>(
       $answerAttempt,
-      columns: [_i4.AnswerAttempt.t.attemptId],
+      columns: [_i5.AnswerAttempt.t.attemptId],
+      transaction: transaction,
+    );
+  }
+
+  /// Creates a relation between this [Attempt] and the given [Certificate]s
+  /// by setting each [Certificate]'s foreign key `attemptId` to refer to this [Attempt].
+  Future<void> certificates(
+    _i1.Session session,
+    Attempt attempt,
+    List<_i6.Certificate> certificate, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (certificate.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('certificate.id');
+    }
+    if (attempt.id == null) {
+      throw ArgumentError.notNull('attempt.id');
+    }
+
+    var $certificate = certificate
+        .map((e) => e.copyWith(attemptId: attempt.id))
+        .toList();
+    await session.db.update<_i6.Certificate>(
+      $certificate,
+      columns: [_i6.Certificate.t.attemptId],
       transaction: transaction,
     );
   }
@@ -759,12 +849,35 @@ class AttemptAttachRowRepository {
     );
   }
 
+  /// Creates a relation between the given [Attempt] and [Result]
+  /// by setting the [Attempt]'s foreign key `id` to refer to the [Result].
+  Future<void> result(
+    _i1.Session session,
+    Attempt attempt,
+    _i4.Result result, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (result.id == null) {
+      throw ArgumentError.notNull('result.id');
+    }
+    if (attempt.id == null) {
+      throw ArgumentError.notNull('attempt.id');
+    }
+
+    var $result = result.copyWith(attemptId: attempt.id);
+    await session.db.updateRow<_i4.Result>(
+      $result,
+      columns: [_i4.Result.t.attemptId],
+      transaction: transaction,
+    );
+  }
+
   /// Creates a relation between this [Attempt] and the given [AnswerAttempt]
   /// by setting the [AnswerAttempt]'s foreign key `attemptId` to refer to this [Attempt].
   Future<void> answerAttempt(
     _i1.Session session,
     Attempt attempt,
-    _i4.AnswerAttempt answerAttempt, {
+    _i5.AnswerAttempt answerAttempt, {
     _i1.Transaction? transaction,
   }) async {
     if (answerAttempt.id == null) {
@@ -775,9 +888,116 @@ class AttemptAttachRowRepository {
     }
 
     var $answerAttempt = answerAttempt.copyWith(attemptId: attempt.id);
-    await session.db.updateRow<_i4.AnswerAttempt>(
+    await session.db.updateRow<_i5.AnswerAttempt>(
       $answerAttempt,
-      columns: [_i4.AnswerAttempt.t.attemptId],
+      columns: [_i5.AnswerAttempt.t.attemptId],
+      transaction: transaction,
+    );
+  }
+
+  /// Creates a relation between this [Attempt] and the given [Certificate]
+  /// by setting the [Certificate]'s foreign key `attemptId` to refer to this [Attempt].
+  Future<void> certificates(
+    _i1.Session session,
+    Attempt attempt,
+    _i6.Certificate certificate, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (certificate.id == null) {
+      throw ArgumentError.notNull('certificate.id');
+    }
+    if (attempt.id == null) {
+      throw ArgumentError.notNull('attempt.id');
+    }
+
+    var $certificate = certificate.copyWith(attemptId: attempt.id);
+    await session.db.updateRow<_i6.Certificate>(
+      $certificate,
+      columns: [_i6.Certificate.t.attemptId],
+      transaction: transaction,
+    );
+  }
+}
+
+class AttemptDetachRepository {
+  const AttemptDetachRepository._();
+
+  /// Detaches the relation between this [Attempt] and the given [Certificate]
+  /// by setting the [Certificate]'s foreign key `attemptId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> certificates(
+    _i1.Session session,
+    List<_i6.Certificate> certificate, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (certificate.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('certificate.id');
+    }
+
+    var $certificate = certificate
+        .map((e) => e.copyWith(attemptId: null))
+        .toList();
+    await session.db.update<_i6.Certificate>(
+      $certificate,
+      columns: [_i6.Certificate.t.attemptId],
+      transaction: transaction,
+    );
+  }
+}
+
+class AttemptDetachRowRepository {
+  const AttemptDetachRowRepository._();
+
+  /// Detaches the relation between this [Attempt] and the [Result] set in `result`
+  /// by setting the [Attempt]'s foreign key `id` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> result(
+    _i1.Session session,
+    Attempt attempt, {
+    _i1.Transaction? transaction,
+  }) async {
+    var $result = attempt.result;
+
+    if ($result == null) {
+      throw ArgumentError.notNull('attempt.result');
+    }
+    if ($result.id == null) {
+      throw ArgumentError.notNull('attempt.result.id');
+    }
+    if (attempt.id == null) {
+      throw ArgumentError.notNull('attempt.id');
+    }
+
+    var $$result = $result.copyWith(attemptId: null);
+    await session.db.updateRow<_i4.Result>(
+      $$result,
+      columns: [_i4.Result.t.attemptId],
+      transaction: transaction,
+    );
+  }
+
+  /// Detaches the relation between this [Attempt] and the given [Certificate]
+  /// by setting the [Certificate]'s foreign key `attemptId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> certificates(
+    _i1.Session session,
+    _i6.Certificate certificate, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (certificate.id == null) {
+      throw ArgumentError.notNull('certificate.id');
+    }
+
+    var $certificate = certificate.copyWith(attemptId: null);
+    await session.db.updateRow<_i6.Certificate>(
+      $certificate,
+      columns: [_i6.Certificate.t.attemptId],
       transaction: transaction,
     );
   }
