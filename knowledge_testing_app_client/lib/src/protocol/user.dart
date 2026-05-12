@@ -14,7 +14,8 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'role.dart' as _i2;
 import 'test.dart' as _i3;
 import 'attempt.dart' as _i4;
-import 'package:knowledge_testing_app_client/src/protocol/protocol.dart' as _i5;
+import 'certificate.dart' as _i5;
+import 'package:knowledge_testing_app_client/src/protocol/protocol.dart' as _i6;
 
 abstract class User implements _i1.SerializableModel {
   User._({
@@ -25,6 +26,7 @@ abstract class User implements _i1.SerializableModel {
     required this.role,
     this.test,
     this.attempt,
+    this.certificates,
   });
 
   factory User({
@@ -35,6 +37,7 @@ abstract class User implements _i1.SerializableModel {
     required _i2.Role role,
     List<_i3.Test>? test,
     List<_i4.Attempt>? attempt,
+    List<_i5.Certificate>? certificates,
   }) = _UserImpl;
 
   factory User.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -46,13 +49,18 @@ abstract class User implements _i1.SerializableModel {
       role: _i2.Role.fromJson((jsonSerialization['role'] as String)),
       test: jsonSerialization['test'] == null
           ? null
-          : _i5.Protocol().deserialize<List<_i3.Test>>(
+          : _i6.Protocol().deserialize<List<_i3.Test>>(
               jsonSerialization['test'],
             ),
       attempt: jsonSerialization['attempt'] == null
           ? null
-          : _i5.Protocol().deserialize<List<_i4.Attempt>>(
+          : _i6.Protocol().deserialize<List<_i4.Attempt>>(
               jsonSerialization['attempt'],
+            ),
+      certificates: jsonSerialization['certificates'] == null
+          ? null
+          : _i6.Protocol().deserialize<List<_i5.Certificate>>(
+              jsonSerialization['certificates'],
             ),
     );
   }
@@ -74,6 +82,8 @@ abstract class User implements _i1.SerializableModel {
 
   List<_i4.Attempt>? attempt;
 
+  List<_i5.Certificate>? certificates;
+
   /// Returns a shallow copy of this [User]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -85,6 +95,7 @@ abstract class User implements _i1.SerializableModel {
     _i2.Role? role,
     List<_i3.Test>? test,
     List<_i4.Attempt>? attempt,
+    List<_i5.Certificate>? certificates,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -98,6 +109,8 @@ abstract class User implements _i1.SerializableModel {
       if (test != null) 'test': test?.toJson(valueToJson: (v) => v.toJson()),
       if (attempt != null)
         'attempt': attempt?.toJson(valueToJson: (v) => v.toJson()),
+      if (certificates != null)
+        'certificates': certificates?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -118,6 +131,7 @@ class _UserImpl extends User {
     required _i2.Role role,
     List<_i3.Test>? test,
     List<_i4.Attempt>? attempt,
+    List<_i5.Certificate>? certificates,
   }) : super._(
          id: id,
          username: username,
@@ -126,6 +140,7 @@ class _UserImpl extends User {
          role: role,
          test: test,
          attempt: attempt,
+         certificates: certificates,
        );
 
   /// Returns a shallow copy of this [User]
@@ -140,6 +155,7 @@ class _UserImpl extends User {
     _i2.Role? role,
     Object? test = _Undefined,
     Object? attempt = _Undefined,
+    Object? certificates = _Undefined,
   }) {
     return User(
       id: id is int? ? id : this.id,
@@ -153,6 +169,9 @@ class _UserImpl extends User {
       attempt: attempt is List<_i4.Attempt>?
           ? attempt
           : this.attempt?.map((e0) => e0.copyWith()).toList(),
+      certificates: certificates is List<_i5.Certificate>?
+          ? certificates
+          : this.certificates?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

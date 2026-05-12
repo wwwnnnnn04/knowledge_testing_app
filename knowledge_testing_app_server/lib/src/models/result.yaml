@@ -1,0 +1,17 @@
+class: Result
+table: result
+
+fields:
+  attemptId: int
+  attempt: Attempt?, relation(name=attempt_result, field=attemptId)
+
+  score: int
+  maxScore: int
+  percentage: double
+
+  passed: bool
+
+indexes:
+  attempt_unique:
+    fields: attemptId
+    unique: true

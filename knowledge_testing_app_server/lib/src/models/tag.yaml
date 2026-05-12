@@ -1,0 +1,7 @@
+class: Tag
+table: tag
+
+fields:
+  name: String
+
+  tests: List<TestTag>?, relation(name=tag_testtag)

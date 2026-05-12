@@ -1,0 +1,9 @@
+class: TestTag
+table: test_tag
+
+fields:
+  testId: int
+  test: Test?, relation(name=test_test_tag, field=testId)
+
+  tagId: int
+  tag: Tag?, relation(name=tag_testtag, field=tagId)

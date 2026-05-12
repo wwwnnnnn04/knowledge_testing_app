@@ -7,5 +7,10 @@ fields:
   creatorId: int
   creator: User?, relation(name=user_test, field=creatorId)
 
+  categoryId: int
+  category: Category?, relation(name=category_tests, field=categoryId)
+
   attempt: List<Attempt>?, relation(name=test_attempt)
   question: List<Question>?, relation(name=test_question)
+  testTags: List<TestTag>?, relation(name=test_test_tag)
+  certificates: List<Certificate>?, relation(name=test_certificate)
