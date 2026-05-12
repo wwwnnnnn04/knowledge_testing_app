@@ -8,5 +8,23 @@ emailIdp:
   - finishPasswordReset:
 jwtRefresh:
   - refreshAccessToken:
+attempt:
+  - getTestForPassing:
+  - startAttempt:
+  - submitAttempt:
+  - getUserResults:
+  - getUserCertificates:
+auth:
+  - register:
+  - login:
+test:
+  - getCategories:
+  - createCategory:
+  - getTests:
+  - getTestsByCreator:
+  - createTest:
+  - addQuestion:
+  - addAnswer:
+  - getTestById:
 greeting:
   - hello:

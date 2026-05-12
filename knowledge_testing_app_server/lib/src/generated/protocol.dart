@@ -30,6 +30,12 @@ import 'tag.dart' as _i15;
 import 'test.dart' as _i16;
 import 'test_tag.dart' as _i17;
 import 'user.dart' as _i18;
+import 'package:knowledge_testing_app_server/src/generated/result.dart' as _i19;
+import 'package:knowledge_testing_app_server/src/generated/certificate.dart'
+    as _i20;
+import 'package:knowledge_testing_app_server/src/generated/category.dart'
+    as _i21;
+import 'package:knowledge_testing_app_server/src/generated/test.dart' as _i22;
 export 'answer.dart';
 export 'answer_attempt.dart';
 export 'attempt.dart';
@@ -1010,6 +1016,26 @@ class Protocol extends _i1.SerializationManagerServer {
                     .toList()
               : null)
           as T;
+    }
+    if (t == List<int>) {
+      return (data as List).map((e) => deserialize<int>(e)).toList() as T;
+    }
+    if (t == List<_i19.Result>) {
+      return (data as List).map((e) => deserialize<_i19.Result>(e)).toList()
+          as T;
+    }
+    if (t == List<_i20.Certificate>) {
+      return (data as List)
+              .map((e) => deserialize<_i20.Certificate>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i21.Category>) {
+      return (data as List).map((e) => deserialize<_i21.Category>(e)).toList()
+          as T;
+    }
+    if (t == List<_i22.Test>) {
+      return (data as List).map((e) => deserialize<_i22.Test>(e)).toList() as T;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);

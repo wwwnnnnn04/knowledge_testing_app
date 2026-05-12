@@ -13,11 +13,15 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../auth/email_idp_endpoint.dart' as _i2;
 import '../auth/jwt_refresh_endpoint.dart' as _i3;
-import '../greetings/greeting_endpoint.dart' as _i4;
+import '../endpoints/attempt_endpoint.dart' as _i4;
+import '../endpoints/auth_endpoint.dart' as _i5;
+import '../endpoints/test_endpoint.dart' as _i6;
+import '../greetings/greeting_endpoint.dart' as _i7;
+import 'package:knowledge_testing_app_server/src/generated/role.dart' as _i8;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i5;
+    as _i9;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i6;
+    as _i10;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -35,7 +39,25 @@ class Endpoints extends _i1.EndpointDispatch {
           'jwtRefresh',
           null,
         ),
-      'greeting': _i4.GreetingEndpoint()
+      'attempt': _i4.AttemptEndpoint()
+        ..initialize(
+          server,
+          'attempt',
+          null,
+        ),
+      'auth': _i5.AuthEndpoint()
+        ..initialize(
+          server,
+          'auth',
+          null,
+        ),
+      'test': _i6.TestEndpoint()
+        ..initialize(
+          server,
+          'test',
+          null,
+        ),
+      'greeting': _i7.GreetingEndpoint()
         ..initialize(
           server,
           'greeting',
@@ -236,6 +258,371 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+    connectors['attempt'] = _i1.EndpointConnector(
+      name: 'attempt',
+      endpoint: endpoints['attempt']!,
+      methodConnectors: {
+        'getTestForPassing': _i1.MethodConnector(
+          name: 'getTestForPassing',
+          params: {
+            'testId': _i1.ParameterDescription(
+              name: 'testId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['attempt'] as _i4.AttemptEndpoint)
+                  .getTestForPassing(
+                    session,
+                    testId: params['testId'],
+                  ),
+        ),
+        'startAttempt': _i1.MethodConnector(
+          name: 'startAttempt',
+          params: {
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'testId': _i1.ParameterDescription(
+              name: 'testId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['attempt'] as _i4.AttemptEndpoint).startAttempt(
+                    session,
+                    userId: params['userId'],
+                    testId: params['testId'],
+                  ),
+        ),
+        'submitAttempt': _i1.MethodConnector(
+          name: 'submitAttempt',
+          params: {
+            'attemptId': _i1.ParameterDescription(
+              name: 'attemptId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'answerIds': _i1.ParameterDescription(
+              name: 'answerIds',
+              type: _i1.getType<List<int>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['attempt'] as _i4.AttemptEndpoint).submitAttempt(
+                    session,
+                    attemptId: params['attemptId'],
+                    answerIds: params['answerIds'],
+                  ),
+        ),
+        'getUserResults': _i1.MethodConnector(
+          name: 'getUserResults',
+          params: {
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['attempt'] as _i4.AttemptEndpoint).getUserResults(
+                    session,
+                    userId: params['userId'],
+                  ),
+        ),
+        'getUserCertificates': _i1.MethodConnector(
+          name: 'getUserCertificates',
+          params: {
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['attempt'] as _i4.AttemptEndpoint)
+                  .getUserCertificates(
+                    session,
+                    userId: params['userId'],
+                  ),
+        ),
+      },
+    );
+    connectors['auth'] = _i1.EndpointConnector(
+      name: 'auth',
+      endpoint: endpoints['auth']!,
+      methodConnectors: {
+        'register': _i1.MethodConnector(
+          name: 'register',
+          params: {
+            'username': _i1.ParameterDescription(
+              name: 'username',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'email': _i1.ParameterDescription(
+              name: 'email',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'password': _i1.ParameterDescription(
+              name: 'password',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'role': _i1.ParameterDescription(
+              name: 'role',
+              type: _i1.getType<_i8.Role>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['auth'] as _i5.AuthEndpoint).register(
+                session,
+                username: params['username'],
+                email: params['email'],
+                password: params['password'],
+                role: params['role'],
+              ),
+        ),
+        'login': _i1.MethodConnector(
+          name: 'login',
+          params: {
+            'email': _i1.ParameterDescription(
+              name: 'email',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'password': _i1.ParameterDescription(
+              name: 'password',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['auth'] as _i5.AuthEndpoint).login(
+                session,
+                email: params['email'],
+                password: params['password'],
+              ),
+        ),
+      },
+    );
+    connectors['test'] = _i1.EndpointConnector(
+      name: 'test',
+      endpoint: endpoints['test']!,
+      methodConnectors: {
+        'getCategories': _i1.MethodConnector(
+          name: 'getCategories',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).getCategories(
+                session,
+              ),
+        ),
+        'createCategory': _i1.MethodConnector(
+          name: 'createCategory',
+          params: {
+            'name': _i1.ParameterDescription(
+              name: 'name',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).createCategory(
+                session,
+                name: params['name'],
+              ),
+        ),
+        'getTests': _i1.MethodConnector(
+          name: 'getTests',
+          params: {
+            'categoryId': _i1.ParameterDescription(
+              name: 'categoryId',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).getTests(
+                session,
+                categoryId: params['categoryId'],
+              ),
+        ),
+        'getTestsByCreator': _i1.MethodConnector(
+          name: 'getTestsByCreator',
+          params: {
+            'creatorId': _i1.ParameterDescription(
+              name: 'creatorId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['test'] as _i6.TestEndpoint).getTestsByCreator(
+                    session,
+                    params['creatorId'],
+                  ),
+        ),
+        'createTest': _i1.MethodConnector(
+          name: 'createTest',
+          params: {
+            'title': _i1.ParameterDescription(
+              name: 'title',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'creatorId': _i1.ParameterDescription(
+              name: 'creatorId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'categoryId': _i1.ParameterDescription(
+              name: 'categoryId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).createTest(
+                session,
+                title: params['title'],
+                creatorId: params['creatorId'],
+                categoryId: params['categoryId'],
+              ),
+        ),
+        'addQuestion': _i1.MethodConnector(
+          name: 'addQuestion',
+          params: {
+            'creatorId': _i1.ParameterDescription(
+              name: 'creatorId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'testId': _i1.ParameterDescription(
+              name: 'testId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'text': _i1.ParameterDescription(
+              name: 'text',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).addQuestion(
+                session,
+                creatorId: params['creatorId'],
+                testId: params['testId'],
+                text: params['text'],
+              ),
+        ),
+        'addAnswer': _i1.MethodConnector(
+          name: 'addAnswer',
+          params: {
+            'creatorId': _i1.ParameterDescription(
+              name: 'creatorId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'questionId': _i1.ParameterDescription(
+              name: 'questionId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'text': _i1.ParameterDescription(
+              name: 'text',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'isCorrect': _i1.ParameterDescription(
+              name: 'isCorrect',
+              type: _i1.getType<bool>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).addAnswer(
+                session,
+                creatorId: params['creatorId'],
+                questionId: params['questionId'],
+                text: params['text'],
+                isCorrect: params['isCorrect'],
+              ),
+        ),
+        'getTestById': _i1.MethodConnector(
+          name: 'getTestById',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).getTestById(
+                session,
+                params['id'],
+              ),
+        ),
+      },
+    );
     connectors['greeting'] = _i1.EndpointConnector(
       name: 'greeting',
       endpoint: endpoints['greeting']!,
@@ -253,16 +640,16 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['greeting'] as _i4.GreetingEndpoint).hello(
+              ) async => (endpoints['greeting'] as _i7.GreetingEndpoint).hello(
                 session,
                 params['name'],
               ),
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i5.Endpoints()
+    modules['serverpod_auth_idp'] = _i9.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i6.Endpoints()
+    modules['serverpod_auth_core'] = _i10.Endpoints()
       ..initializeEndpoints(server);
   }
 }

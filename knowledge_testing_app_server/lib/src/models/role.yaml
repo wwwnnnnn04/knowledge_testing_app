@@ -1,4 +1,4 @@
 enum: Role
 values:
-  - admin
+  - author
   - user

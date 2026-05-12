@@ -16,9 +16,21 @@ import 'package:serverpod_client/serverpod_client.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
+import 'package:knowledge_testing_app_client/src/protocol/test.dart' as _i5;
+import 'package:knowledge_testing_app_client/src/protocol/attempt.dart' as _i6;
+import 'package:knowledge_testing_app_client/src/protocol/result.dart' as _i7;
+import 'package:knowledge_testing_app_client/src/protocol/certificate.dart'
+    as _i8;
+import 'package:knowledge_testing_app_client/src/protocol/user.dart' as _i9;
+import 'package:knowledge_testing_app_client/src/protocol/role.dart' as _i10;
+import 'package:knowledge_testing_app_client/src/protocol/category.dart'
+    as _i11;
+import 'package:knowledge_testing_app_client/src/protocol/question.dart'
+    as _i12;
+import 'package:knowledge_testing_app_client/src/protocol/answer.dart' as _i13;
 import 'package:knowledge_testing_app_client/src/protocol/greetings/greeting.dart'
-    as _i5;
-import 'protocol.dart' as _i6;
+    as _i14;
+import 'protocol.dart' as _i15;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -234,6 +246,185 @@ class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
   );
 }
 
+/// {@category Endpoint}
+class EndpointAttempt extends _i2.EndpointRef {
+  EndpointAttempt(_i2.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'attempt';
+
+  _i3.Future<_i5.Test?> getTestForPassing({required int testId}) =>
+      caller.callServerEndpoint<_i5.Test?>(
+        'attempt',
+        'getTestForPassing',
+        {'testId': testId},
+      );
+
+  _i3.Future<_i6.Attempt> startAttempt({
+    required int userId,
+    required int testId,
+  }) => caller.callServerEndpoint<_i6.Attempt>(
+    'attempt',
+    'startAttempt',
+    {
+      'userId': userId,
+      'testId': testId,
+    },
+  );
+
+  _i3.Future<_i7.Result> submitAttempt({
+    required int attemptId,
+    required List<int> answerIds,
+  }) => caller.callServerEndpoint<_i7.Result>(
+    'attempt',
+    'submitAttempt',
+    {
+      'attemptId': attemptId,
+      'answerIds': answerIds,
+    },
+  );
+
+  _i3.Future<List<_i7.Result>> getUserResults({required int userId}) =>
+      caller.callServerEndpoint<List<_i7.Result>>(
+        'attempt',
+        'getUserResults',
+        {'userId': userId},
+      );
+
+  _i3.Future<List<_i8.Certificate>> getUserCertificates({
+    required int userId,
+  }) => caller.callServerEndpoint<List<_i8.Certificate>>(
+    'attempt',
+    'getUserCertificates',
+    {'userId': userId},
+  );
+}
+
+/// {@category Endpoint}
+class EndpointAuth extends _i2.EndpointRef {
+  EndpointAuth(_i2.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'auth';
+
+  /// Регистрация
+  _i3.Future<_i9.User> register({
+    required String username,
+    required String email,
+    required String password,
+    required _i10.Role role,
+  }) => caller.callServerEndpoint<_i9.User>(
+    'auth',
+    'register',
+    {
+      'username': username,
+      'email': email,
+      'password': password,
+      'role': role,
+    },
+  );
+
+  /// Логин
+  _i3.Future<_i9.User?> login({
+    required String email,
+    required String password,
+  }) => caller.callServerEndpoint<_i9.User?>(
+    'auth',
+    'login',
+    {
+      'email': email,
+      'password': password,
+    },
+  );
+}
+
+/// {@category Endpoint}
+class EndpointTest extends _i2.EndpointRef {
+  EndpointTest(_i2.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'test';
+
+  _i3.Future<List<_i11.Category>> getCategories() =>
+      caller.callServerEndpoint<List<_i11.Category>>(
+        'test',
+        'getCategories',
+        {},
+      );
+
+  _i3.Future<_i11.Category> createCategory({required String name}) =>
+      caller.callServerEndpoint<_i11.Category>(
+        'test',
+        'createCategory',
+        {'name': name},
+      );
+
+  _i3.Future<List<_i5.Test>> getTests({int? categoryId}) =>
+      caller.callServerEndpoint<List<_i5.Test>>(
+        'test',
+        'getTests',
+        {'categoryId': categoryId},
+      );
+
+  _i3.Future<List<_i5.Test>> getTestsByCreator(int creatorId) =>
+      caller.callServerEndpoint<List<_i5.Test>>(
+        'test',
+        'getTestsByCreator',
+        {'creatorId': creatorId},
+      );
+
+  _i3.Future<_i5.Test> createTest({
+    required String title,
+    required int creatorId,
+    required int categoryId,
+  }) => caller.callServerEndpoint<_i5.Test>(
+    'test',
+    'createTest',
+    {
+      'title': title,
+      'creatorId': creatorId,
+      'categoryId': categoryId,
+    },
+  );
+
+  _i3.Future<_i12.Question> addQuestion({
+    required int creatorId,
+    required int testId,
+    required String text,
+  }) => caller.callServerEndpoint<_i12.Question>(
+    'test',
+    'addQuestion',
+    {
+      'creatorId': creatorId,
+      'testId': testId,
+      'text': text,
+    },
+  );
+
+  _i3.Future<_i13.Answer> addAnswer({
+    required int creatorId,
+    required int questionId,
+    required String text,
+    required bool isCorrect,
+  }) => caller.callServerEndpoint<_i13.Answer>(
+    'test',
+    'addAnswer',
+    {
+      'creatorId': creatorId,
+      'questionId': questionId,
+      'text': text,
+      'isCorrect': isCorrect,
+    },
+  );
+
+  _i3.Future<_i5.Test?> getTestById(int id) =>
+      caller.callServerEndpoint<_i5.Test?>(
+        'test',
+        'getTestById',
+        {'id': id},
+      );
+}
+
 /// This is an example endpoint that returns a greeting message through
 /// its [hello] method.
 /// {@category Endpoint}
@@ -244,8 +435,8 @@ class EndpointGreeting extends _i2.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i3.Future<_i5.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i5.Greeting>(
+  _i3.Future<_i14.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i14.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -283,7 +474,7 @@ class Client extends _i2.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i6.Protocol(),
+         _i15.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -294,6 +485,9 @@ class Client extends _i2.ServerpodClientShared {
        ) {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    attempt = EndpointAttempt(this);
+    auth = EndpointAuth(this);
+    test = EndpointTest(this);
     greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
@@ -301,6 +495,12 @@ class Client extends _i2.ServerpodClientShared {
   late final EndpointEmailIdp emailIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
+
+  late final EndpointAttempt attempt;
+
+  late final EndpointAuth auth;
+
+  late final EndpointTest test;
 
   late final EndpointGreeting greeting;
 
@@ -310,6 +510,9 @@ class Client extends _i2.ServerpodClientShared {
   Map<String, _i2.EndpointRef> get endpointRefLookup => {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'attempt': attempt,
+    'auth': auth,
+    'test': test,
     'greeting': greeting,
   };
 

@@ -25,10 +25,16 @@ import 'tag.dart' as _i12;
 import 'test.dart' as _i13;
 import 'test_tag.dart' as _i14;
 import 'user.dart' as _i15;
-import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i16;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+import 'package:knowledge_testing_app_client/src/protocol/result.dart' as _i16;
+import 'package:knowledge_testing_app_client/src/protocol/certificate.dart'
     as _i17;
+import 'package:knowledge_testing_app_client/src/protocol/category.dart'
+    as _i18;
+import 'package:knowledge_testing_app_client/src/protocol/test.dart' as _i19;
+import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+    as _i20;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i21;
 export 'answer.dart';
 export 'answer_attempt.dart';
 export 'attempt.dart';
@@ -238,11 +244,31 @@ class Protocol extends _i1.SerializationManager {
               : null)
           as T;
     }
+    if (t == List<int>) {
+      return (data as List).map((e) => deserialize<int>(e)).toList() as T;
+    }
+    if (t == List<_i16.Result>) {
+      return (data as List).map((e) => deserialize<_i16.Result>(e)).toList()
+          as T;
+    }
+    if (t == List<_i17.Certificate>) {
+      return (data as List)
+              .map((e) => deserialize<_i17.Certificate>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i18.Category>) {
+      return (data as List).map((e) => deserialize<_i18.Category>(e)).toList()
+          as T;
+    }
+    if (t == List<_i19.Test>) {
+      return (data as List).map((e) => deserialize<_i19.Test>(e)).toList() as T;
+    }
     try {
-      return _i16.Protocol().deserialize<T>(data, t);
+      return _i20.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
-      return _i17.Protocol().deserialize<T>(data, t);
+      return _i21.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -309,11 +335,11 @@ class Protocol extends _i1.SerializationManager {
       case _i15.User():
         return 'User';
     }
-    className = _i16.Protocol().getClassNameForObject(data);
+    className = _i20.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i17.Protocol().getClassNameForObject(data);
+    className = _i21.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -370,11 +396,11 @@ class Protocol extends _i1.SerializationManager {
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i16.Protocol().deserializeByClassName(data);
+      return _i20.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i17.Protocol().deserializeByClassName(data);
+      return _i21.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
