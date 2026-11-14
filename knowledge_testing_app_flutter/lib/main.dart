@@ -12,11 +12,16 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final config = await AppConfig.loadConfig();
-  serverUrl = (config.apiUrl ?? 'http://localhost:8080').trim();
+
+  debugPrint('CONFIG API URL: ${config.apiUrl}');
+
+  serverUrl = (config.apiUrl ?? 'http://192.168.1.13:8080').trim();
 
   if (!serverUrl.endsWith('/')) {
     serverUrl = '$serverUrl/';
   }
+
+  debugPrint('FINAL SERVER URL: $serverUrl');
 
   client = Client(serverUrl)..connectivityMonitor = FlutterConnectivityMonitor();
 

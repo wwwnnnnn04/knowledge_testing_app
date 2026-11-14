@@ -13,6 +13,7 @@ attempt:
   - startAttempt:
   - submitAttempt:
   - getUserResults:
+  - getAttemptReview:
   - getUserCertificates:
 auth:
   - register:
@@ -23,8 +24,13 @@ test:
   - getTests:
   - getTestsByCreator:
   - createTest:
+  - duplicateTest:
   - addQuestion:
+  - duplicateQuestion:
   - addAnswer:
   - getTestById:
+  - deleteAnswer:
+  - deleteQuestion:
+  - deleteTest:
 greeting:
   - hello:

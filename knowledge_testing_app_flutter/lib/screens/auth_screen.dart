@@ -133,7 +133,8 @@ class _AuthScreenState extends State<AuthScreen> {
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
-                            if (!_isLogin && (value == null || value.trim().isEmpty)) {
+                            if (!_isLogin &&
+                                (value == null || value.trim().isEmpty)) {
                               return 'Введите имя пользователя';
                             }
                             return null;
@@ -179,7 +180,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       const SizedBox(height: 12),
                       if (!_isLogin)
                         DropdownButtonFormField<Role>(
-                          value: _selectedRole,
+                          initialValue: _selectedRole,
                           decoration: const InputDecoration(
                             labelText: 'Роль',
                             border: OutlineInputBorder(),
@@ -210,7 +211,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       TextButton(
                         onPressed: _isLoading ? null : _switchMode,
                         child: Text(
-                          _isLogin ? 'Нет аккаунта? Зарегистрироваться' : 'Уже есть аккаунт? Войти',
+                          _isLogin
+                              ? 'Нет аккаунта? Зарегистрироваться'
+                              : 'Уже есть аккаунт? Войти',
                         ),
                       ),
                     ],

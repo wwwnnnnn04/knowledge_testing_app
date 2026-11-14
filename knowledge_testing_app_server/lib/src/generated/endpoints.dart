@@ -350,6 +350,31 @@ class Endpoints extends _i1.EndpointDispatch {
                     userId: params['userId'],
                   ),
         ),
+        'getAttemptReview': _i1.MethodConnector(
+          name: 'getAttemptReview',
+          params: {
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'attemptId': _i1.ParameterDescription(
+              name: 'attemptId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['attempt'] as _i4.AttemptEndpoint)
+                  .getAttemptReview(
+                    session,
+                    userId: params['userId'],
+                    attemptId: params['attemptId'],
+                  ),
+        ),
         'getUserCertificates': _i1.MethodConnector(
           name: 'getUserCertificates',
           params: {
@@ -537,6 +562,30 @@ class Endpoints extends _i1.EndpointDispatch {
                 categoryId: params['categoryId'],
               ),
         ),
+        'duplicateTest': _i1.MethodConnector(
+          name: 'duplicateTest',
+          params: {
+            'creatorId': _i1.ParameterDescription(
+              name: 'creatorId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'testId': _i1.ParameterDescription(
+              name: 'testId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).duplicateTest(
+                session,
+                creatorId: params['creatorId'],
+                testId: params['testId'],
+              ),
+        ),
         'addQuestion': _i1.MethodConnector(
           name: 'addQuestion',
           params: {
@@ -566,6 +615,31 @@ class Endpoints extends _i1.EndpointDispatch {
                 testId: params['testId'],
                 text: params['text'],
               ),
+        ),
+        'duplicateQuestion': _i1.MethodConnector(
+          name: 'duplicateQuestion',
+          params: {
+            'creatorId': _i1.ParameterDescription(
+              name: 'creatorId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'questionId': _i1.ParameterDescription(
+              name: 'questionId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['test'] as _i6.TestEndpoint).duplicateQuestion(
+                    session,
+                    creatorId: params['creatorId'],
+                    questionId: params['questionId'],
+                  ),
         ),
         'addAnswer': _i1.MethodConnector(
           name: 'addAnswer',
@@ -619,6 +693,78 @@ class Endpoints extends _i1.EndpointDispatch {
               ) async => (endpoints['test'] as _i6.TestEndpoint).getTestById(
                 session,
                 params['id'],
+              ),
+        ),
+        'deleteAnswer': _i1.MethodConnector(
+          name: 'deleteAnswer',
+          params: {
+            'creatorId': _i1.ParameterDescription(
+              name: 'creatorId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'answerId': _i1.ParameterDescription(
+              name: 'answerId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).deleteAnswer(
+                session,
+                creatorId: params['creatorId'],
+                answerId: params['answerId'],
+              ),
+        ),
+        'deleteQuestion': _i1.MethodConnector(
+          name: 'deleteQuestion',
+          params: {
+            'creatorId': _i1.ParameterDescription(
+              name: 'creatorId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'questionId': _i1.ParameterDescription(
+              name: 'questionId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).deleteQuestion(
+                session,
+                creatorId: params['creatorId'],
+                questionId: params['questionId'],
+              ),
+        ),
+        'deleteTest': _i1.MethodConnector(
+          name: 'deleteTest',
+          params: {
+            'creatorId': _i1.ParameterDescription(
+              name: 'creatorId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'testId': _i1.ParameterDescription(
+              name: 'testId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['test'] as _i6.TestEndpoint).deleteTest(
+                session,
+                creatorId: params['creatorId'],
+                testId: params['testId'],
               ),
         ),
       },

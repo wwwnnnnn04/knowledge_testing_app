@@ -291,6 +291,18 @@ class EndpointAttempt extends _i2.EndpointRef {
         {'userId': userId},
       );
 
+  _i3.Future<_i5.Test?> getAttemptReview({
+    required int userId,
+    required int attemptId,
+  }) => caller.callServerEndpoint<_i5.Test?>(
+    'attempt',
+    'getAttemptReview',
+    {
+      'userId': userId,
+      'attemptId': attemptId,
+    },
+  );
+
   _i3.Future<List<_i8.Certificate>> getUserCertificates({
     required int userId,
   }) => caller.callServerEndpoint<List<_i8.Certificate>>(
@@ -387,6 +399,18 @@ class EndpointTest extends _i2.EndpointRef {
     },
   );
 
+  _i3.Future<_i5.Test> duplicateTest({
+    required int creatorId,
+    required int testId,
+  }) => caller.callServerEndpoint<_i5.Test>(
+    'test',
+    'duplicateTest',
+    {
+      'creatorId': creatorId,
+      'testId': testId,
+    },
+  );
+
   _i3.Future<_i12.Question> addQuestion({
     required int creatorId,
     required int testId,
@@ -398,6 +422,18 @@ class EndpointTest extends _i2.EndpointRef {
       'creatorId': creatorId,
       'testId': testId,
       'text': text,
+    },
+  );
+
+  _i3.Future<_i12.Question> duplicateQuestion({
+    required int creatorId,
+    required int questionId,
+  }) => caller.callServerEndpoint<_i12.Question>(
+    'test',
+    'duplicateQuestion',
+    {
+      'creatorId': creatorId,
+      'questionId': questionId,
     },
   );
 
@@ -423,6 +459,42 @@ class EndpointTest extends _i2.EndpointRef {
         'getTestById',
         {'id': id},
       );
+
+  _i3.Future<void> deleteAnswer({
+    required int creatorId,
+    required int answerId,
+  }) => caller.callServerEndpoint<void>(
+    'test',
+    'deleteAnswer',
+    {
+      'creatorId': creatorId,
+      'answerId': answerId,
+    },
+  );
+
+  _i3.Future<void> deleteQuestion({
+    required int creatorId,
+    required int questionId,
+  }) => caller.callServerEndpoint<void>(
+    'test',
+    'deleteQuestion',
+    {
+      'creatorId': creatorId,
+      'questionId': questionId,
+    },
+  );
+
+  _i3.Future<void> deleteTest({
+    required int creatorId,
+    required int testId,
+  }) => caller.callServerEndpoint<void>(
+    'test',
+    'deleteTest',
+    {
+      'creatorId': creatorId,
+      'testId': testId,
+    },
+  );
 }
 
 /// This is an example endpoint that returns a greeting message through

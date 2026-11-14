@@ -189,7 +189,7 @@ class _CreateTestScreenState extends State<CreateTestScreen> {
                           ),
                           const SizedBox(height: 16),
                           DropdownButtonFormField<int>(
-                            value: _selectedCategoryId,
+                            initialValue: _selectedCategoryId,
                             decoration: const InputDecoration(
                               labelText: 'Категория',
                               border: OutlineInputBorder(),
