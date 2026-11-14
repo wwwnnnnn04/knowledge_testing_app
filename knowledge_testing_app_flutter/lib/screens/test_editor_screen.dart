@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:knowledge_testing_app_client/knowledge_testing_app_client.dart';
 
 import '../main.dart';
+import '../quiz_rules.dart';
 
 class TestEditorScreen extends StatefulWidget {
   final User currentUser;
@@ -66,6 +67,32 @@ class _TestEditorScreenState extends State<TestEditorScreen> {
     );
   }
 
+  Future<bool> _confirmAction({
+    required String title,
+    required String message,
+    String confirmText = 'Удалить',
+  }) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Отмена'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(confirmText),
+          ),
+        ],
+      ),
+    );
+
+    return confirmed ?? false;
+  }
+
   Future<void> _addQuestion() async {
     final controller = TextEditingController();
 
@@ -88,7 +115,8 @@ class _TestEditorScreenState extends State<TestEditorScreen> {
               child: const Text('Отмена'),
             ),
             ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(controller.text.trim()),
+              onPressed: () =>
+                  Navigator.of(context).pop(controller.text.trim()),
               child: const Text('Сохранить'),
             ),
           ],
@@ -117,6 +145,9 @@ class _TestEditorScreenState extends State<TestEditorScreen> {
   Future<void> _addAnswer(Question question) async {
     final textController = TextEditingController();
     bool isCorrect = false;
+    final hasCorrectAnswer = (question.answer ?? []).any(
+      (answer) => answer.isCorrect,
+    );
 
     final result = await showDialog<Map<String, dynamic>?>(
       context: context,
@@ -147,6 +178,10 @@ class _TestEditorScreenState extends State<TestEditorScreen> {
                     title: const Text('Правильный ответ'),
                     contentPadding: EdgeInsets.zero,
                   ),
+                  if (hasCorrectAnswer)
+                    const Text(
+                      'Если отметить новый ответ правильным, он заменит текущий правильный ответ.',
+                    ),
                 ],
               ),
               actions: [
@@ -194,6 +229,69 @@ class _TestEditorScreenState extends State<TestEditorScreen> {
     }
   }
 
+  Future<void> _duplicateQuestion(Question question) async {
+    try {
+      await client.test.duplicateQuestion(
+        creatorId: widget.currentUser.id!,
+        questionId: question.id!,
+      );
+
+      await _loadTest();
+      if (!mounted) return;
+      _showMessage('Вопрос скопирован');
+    } catch (e) {
+      if (!mounted) return;
+      _showMessage(_readableError(e));
+    }
+  }
+
+  Future<void> _deleteQuestion(Question question) async {
+    final confirmed = await _confirmAction(
+      title: 'Удалить вопрос?',
+      message:
+          'Вопрос #${question.order} и все его варианты ответа будут удалены.',
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await client.test.deleteQuestion(
+        creatorId: widget.currentUser.id!,
+        questionId: question.id!,
+      );
+
+      await _loadTest();
+      if (!mounted) return;
+      _showMessage('Вопрос удален');
+    } catch (e) {
+      if (!mounted) return;
+      _showMessage(_readableError(e));
+    }
+  }
+
+  Future<void> _deleteAnswer(Answer answer) async {
+    final confirmed = await _confirmAction(
+      title: 'Удалить вариант ответа?',
+      message: 'Вариант "${answer.text}" будет удален.',
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await client.test.deleteAnswer(
+        creatorId: widget.currentUser.id!,
+        answerId: answer.id!,
+      );
+
+      await _loadTest();
+      if (!mounted) return;
+      _showMessage('Ответ удален');
+    } catch (e) {
+      if (!mounted) return;
+      _showMessage(_readableError(e));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.currentUser.role != Role.author) {
@@ -207,6 +305,11 @@ class _TestEditorScreenState extends State<TestEditorScreen> {
 
     final test = _test;
     final questions = test?.question ?? [];
+    final readyQuestions = questions.where((question) {
+      final answers = question.answer ?? [];
+      return answers.isNotEmpty &&
+          answers.where((answer) => answer.isCorrect).length == 1;
+    }).length;
 
     return Scaffold(
       appBar: AppBar(
@@ -242,10 +345,21 @@ class _TestEditorScreenState extends State<TestEditorScreen> {
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         const SizedBox(height: 8),
-                        if (test.category != null) Text('Категория: ${test.category!.name}'),
-                        if (test.creator != null) Text('Автор: ${test.creator!.username}'),
+                        if (test.category != null)
+                          Text('Категория: ${test.category!.name}'),
+                        if (test.creator != null)
+                          Text('Автор: ${test.creator!.username}'),
                         const SizedBox(height: 8),
-                        Text('Количество вопросов: ${questions.length}'),
+                        Text(QuizRules.summaryFor(questions.length)),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Готово к прохождению: $readyQuestions из ${questions.length} вопросов с одним правильным ответом.',
+                        ),
+                        if (questions.length !=
+                            QuizRules.recommendedQuestionCount)
+                          Text(
+                            'Рекомендуемый объем: ${QuizRules.recommendedQuestionCount} вопросов.',
+                          ),
                       ],
                     ),
                   ),
@@ -284,6 +398,35 @@ class _TestEditorScreenState extends State<TestEditorScreen> {
                                     ),
                                   ),
                                 ),
+                                PopupMenuButton<String>(
+                                  icon: const Icon(Icons.more_vert),
+                                  onSelected: (value) {
+                                    switch (value) {
+                                      case 'duplicate':
+                                        _duplicateQuestion(question);
+                                      case 'delete':
+                                        _deleteQuestion(question);
+                                    }
+                                  },
+                                  itemBuilder: (context) => const [
+                                    PopupMenuItem(
+                                      value: 'duplicate',
+                                      child: ListTile(
+                                        leading: Icon(Icons.copy_outlined),
+                                        title: Text('Дублировать'),
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      value: 'delete',
+                                      child: ListTile(
+                                        leading: Icon(Icons.delete_outline),
+                                        title: Text('Удалить'),
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                             const SizedBox(height: 12),
@@ -298,11 +441,20 @@ class _TestEditorScreenState extends State<TestEditorScreen> {
                                   dense: true,
                                   contentPadding: EdgeInsets.zero,
                                   leading: Icon(
-                                    answer.isCorrect ? Icons.check_circle : Icons.radio_button_unchecked,
+                                    answer.isCorrect
+                                        ? Icons.check_circle
+                                        : Icons.radio_button_unchecked,
                                   ),
                                   title: Text(answer.text),
                                   subtitle: Text(
-                                    answer.isCorrect ? 'Правильный ответ' : 'Неправильный ответ',
+                                    answer.isCorrect
+                                        ? 'Правильный ответ'
+                                        : 'Неправильный ответ',
+                                  ),
+                                  trailing: IconButton(
+                                    onPressed: () => _deleteAnswer(answer),
+                                    icon: const Icon(Icons.delete_outline),
+                                    tooltip: 'Удалить ответ',
                                   ),
                                 ),
                               ),

@@ -617,6 +617,41 @@ class _AttemptEndpoint {
     });
   }
 
+  _i3.Future<_i5.Test?> getAttemptReview(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int userId,
+    required int attemptId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'attempt',
+            method: 'getAttemptReview',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'attempt',
+          methodName: 'getAttemptReview',
+          parameters: _i1.testObjectToJson({
+            'userId': userId,
+            'attemptId': attemptId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i5.Test?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _i3.Future<List<_i8.Certificate>> getUserCertificates(
     _i1.TestSessionBuilder sessionBuilder, {
     required int userId,
@@ -904,6 +939,41 @@ class _TestEndpoint {
     });
   }
 
+  _i3.Future<_i5.Test> duplicateTest(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int creatorId,
+    required int testId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'test',
+            method: 'duplicateTest',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'test',
+          methodName: 'duplicateTest',
+          parameters: _i1.testObjectToJson({
+            'creatorId': creatorId,
+            'testId': testId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i5.Test>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _i3.Future<_i12.Question> addQuestion(
     _i1.TestSessionBuilder sessionBuilder, {
     required int creatorId,
@@ -925,6 +995,41 @@ class _TestEndpoint {
             'creatorId': creatorId,
             'testId': testId,
             'text': text,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i12.Question>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i12.Question> duplicateQuestion(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int creatorId,
+    required int questionId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'test',
+            method: 'duplicateQuestion',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'test',
+          methodName: 'duplicateQuestion',
+          parameters: _i1.testObjectToJson({
+            'creatorId': creatorId,
+            'questionId': questionId,
           }),
           serializationManager: _serializationManager,
         );
@@ -1004,6 +1109,111 @@ class _TestEndpoint {
                   _localCallContext.arguments,
                 )
                 as _i3.Future<_i5.Test?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<void> deleteAnswer(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int creatorId,
+    required int answerId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'test',
+            method: 'deleteAnswer',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'test',
+          methodName: 'deleteAnswer',
+          parameters: _i1.testObjectToJson({
+            'creatorId': creatorId,
+            'answerId': answerId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<void> deleteQuestion(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int creatorId,
+    required int questionId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'test',
+            method: 'deleteQuestion',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'test',
+          methodName: 'deleteQuestion',
+          parameters: _i1.testObjectToJson({
+            'creatorId': creatorId,
+            'questionId': questionId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<void> deleteTest(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int creatorId,
+    required int testId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'test',
+            method: 'deleteTest',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'test',
+          methodName: 'deleteTest',
+          parameters: _i1.testObjectToJson({
+            'creatorId': creatorId,
+            'testId': testId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<void>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

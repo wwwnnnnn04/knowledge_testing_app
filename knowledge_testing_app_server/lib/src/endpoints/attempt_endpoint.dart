@@ -65,13 +65,17 @@ class AttemptEndpoint extends Endpoint {
     }
 
     if (user.role != Role.user) {
-      throw Exception('Проходить тесты может только пользователь с ролью user.');
+      throw Exception(
+        'Проходить тесты может только пользователь с ролью user.',
+      );
     }
 
     final test = await Test.db.findById(session, testId);
     if (test == null) {
       throw Exception('Тест не найден.');
     }
+
+    await _ensureTestCanBePassed(session, testId);
 
     final attempt = Attempt(
       userId: userId,
@@ -168,7 +172,7 @@ class AttemptEndpoint extends Endpoint {
       }
 
       final double percentage = maxScore == 0 ? 0 : (score / maxScore) * 100;
-      final bool passed = percentage >= 70;
+      final bool passed = score >= _minimumPassingScore(maxScore);
 
       final insertedResult = await Result.db.insertRow(
         session,
@@ -241,6 +245,76 @@ class AttemptEndpoint extends Endpoint {
     return results;
   }
 
+  Future<Test?> getAttemptReview(
+    Session session, {
+    required int userId,
+    required int attemptId,
+  }) async {
+    final attempt = await Attempt.db.findById(session, attemptId);
+
+    if (attempt == null) {
+      throw Exception('Попытка не найдена.');
+    }
+
+    if (attempt.userId != userId) {
+      throw Exception('Нельзя смотреть результаты чужой попытки.');
+    }
+
+    final result = await Result.db.findFirstRow(
+      session,
+      where: (r) => r.attemptId.equals(attemptId),
+    );
+
+    if (result == null) {
+      throw Exception('Результат для этой попытки еще не рассчитан.');
+    }
+
+    final test = await Test.db.findById(
+      session,
+      attempt.testId,
+      include: Test.include(
+        category: Category.include(),
+        creator: User.include(),
+      ),
+    );
+
+    if (test == null) {
+      return null;
+    }
+
+    final questions = await Question.db.find(
+      session,
+      where: (q) => q.testId.equals(test.id!),
+      orderBy: (q) => q.order,
+    );
+
+    final reviewQuestions = <Question>[];
+
+    for (final question in questions) {
+      final answers = await Answer.db.find(
+        session,
+        where: (a) => a.questionId.equals(question.id!),
+        orderBy: (a) => a.id,
+      );
+
+      final answerAttempts = await AnswerAttempt.db.find(
+        session,
+        where: (a) =>
+            a.attemptId.equals(attemptId) & a.questionId.equals(question.id!),
+        orderBy: (a) => a.id,
+      );
+
+      reviewQuestions.add(
+        question.copyWith(
+          answer: answers,
+          answerAttempt: answerAttempts,
+        ),
+      );
+    }
+
+    return test.copyWith(question: reviewQuestions);
+  }
+
   Future<List<Certificate>> getUserCertificates(
     Session session, {
     required int userId,
@@ -255,5 +329,35 @@ class AttemptEndpoint extends Endpoint {
       orderBy: (c) => c.id,
       orderDescending: true,
     );
+  }
+}
+
+int _minimumPassingScore(int maxScore) {
+  return (maxScore * 0.8).ceil();
+}
+
+Future<void> _ensureTestCanBePassed(Session session, int testId) async {
+  final questions = await Question.db.find(
+    session,
+    where: (q) => q.testId.equals(testId),
+    orderBy: (q) => q.order,
+  );
+
+  if (questions.isEmpty) {
+    throw Exception('В тесте нет вопросов.');
+  }
+
+  for (final question in questions) {
+    final answers = await Answer.db.find(
+      session,
+      where: (a) => a.questionId.equals(question.id!),
+    );
+    final correctAnswers = answers.where((answer) => answer.isCorrect).length;
+
+    if (answers.isEmpty || correctAnswers != 1) {
+      throw Exception(
+        'Вопрос #${question.order} должен иметь варианты ответа и ровно один правильный ответ.',
+      );
+    }
   }
 }
